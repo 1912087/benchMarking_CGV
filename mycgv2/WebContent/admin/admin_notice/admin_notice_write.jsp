@@ -19,7 +19,7 @@
 	<!---------------------------------------------->
 	<div class="content">
 		<h1>공지사항-글쓰기</h1>
-		<form name="boardWriteForm" action="#" method="get">
+		<form name="boardWriteForm" action="adminWriteNoticeController.jsp" method="post">
 			<ul>
 				<li>
 					<label>제목</label>

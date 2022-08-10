@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import = "com.mycgv2.dao.CgvNotice2DAO, com.mycgv2.vo.CgvNotice2VO, java.util.ArrayList" %>
+<%
+	CgvNotice2DAO dao = new CgvNotice2DAO();
+	ArrayList<CgvNotice2VO> list = (ArrayList<CgvNotice2VO>)dao.select();
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,66 +36,23 @@
 				<th>등록날짜</th>
 				<th>조회수</th>
 			</tr>
+			<% if(list.size() == 0) { %>
 			<tr>
-				<td>1</td>
-				<td><a href="admin_notice_content.jsp">탑건 재밌어요~ ^^</a></td>
-				<td>2022-07-22</td>
-				<td>1245</td>
+				<td colspan = "4">등록된 게시글이 없습니다.</td>
 			</tr>
+			<% } else {
+					for(CgvNotice2VO vo : list) {
+			%>
 			<tr>
-				<td>2</td>
-				<td>탑건 재밌어요~ ^^</td>
-				<td>2022-07-22</td>
-				<td>1245</td>
+				<td><%= vo.getRno() %></td>
+				<td><a href="admin_notice_content.jsp?nid=<%= vo.getNid() %>"><%= vo.getNtitle() %></a></td>
+				<td><%= vo.getNdate() %></td>
+				<td><%= vo.getNhits() %></td>
 			</tr>
-			<tr>
-				<td>3</td>
-				<td>탑건 재밌어요~ ^^</td>
-				<td>2022-07-22</td>
-				<td>1245</td>
-			</tr>
-			<tr>
-				<td>4</td>
-				<td>탑건 재밌어요~ ^^</td>
-				<td>2022-07-22</td>
-				<td>1245</td>
-			</tr>
-			<tr>
-				<td>5</td>
-				<td>탑건 재밌어요~ ^^</td>
-				<td>2022-07-22</td>
-				<td>1245</td>
-			</tr>
-			<tr>
-				<td>6</td>
-				<td>탑건 재밌어요~ ^^</td>
-				<td>2022-07-22</td>
-				<td>1245</td>
-			</tr>
-			<tr>
-				<td>7</td>
-				<td>탑건 재밌어요~ ^^</td>
-				<td>2022-07-22</td>
-				<td>1245</td>
-			</tr>
-			<tr>
-				<td>8</td>
-				<td>탑건 재밌어요~ ^^</td>
-				<td>2022-07-22</td>
-				<td>1245</td>
-			</tr>
-			<tr>
-				<td>9</td>
-				<td>탑건 재밌어요~ ^^</td>
-				<td>2022-07-22</td>
-				<td>1245</td>
-			</tr>
-			<tr>
-				<td>10</td>
-				<td>탑건 재밌어요~ ^^</td>
-				<td>2022-07-22</td>
-				<td>1245</td>
-			</tr>
+			<%
+					}
+				}
+			%>
 			<tr>
 				<td colspan="4"> << 1 2 3 4 5 >> </td>
 			</tr>
