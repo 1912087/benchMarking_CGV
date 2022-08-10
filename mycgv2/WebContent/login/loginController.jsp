@@ -9,8 +9,12 @@
 <%
 	CgvMember2DAO dao = new CgvMember2DAO();
 	int result = dao.select(vo);
-	if(result == 1){
+	if(result == 2){
 		response.sendRedirect("../index.jsp?login=ok");
+	}else if(result == 1){
+		response.sendRedirect("login.jsp?login=1");
+	}else if(result == 0){
+		response.sendRedirect("login.jsp?login=0");
 	}else{
 		response.sendRedirect("login.jsp?login=fail");
 	}

@@ -17,6 +17,10 @@
 	let login_result = '<%= login_result %>';
 	if(join_result == "ok"){
 		alert("회원가입에 성공하였습니다.");
+	}else if(login_result == "1"){
+		alert("비밀번호가 일치하지 않습니다.");
+	}else if(login_result == "0"){
+		alert("존재하지 않는 아이디입니다.");
 	}else if(login_result == "fail"){
 		alert("로그인에 실패하였습니다.");
 	}

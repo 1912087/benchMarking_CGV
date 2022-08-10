@@ -62,11 +62,15 @@ public class CgvMember2DAO extends DBConn{
 	//select : 로그인 페이지
 	public int select(CgvMember2VO vo) {
 		int result = 0;
-		String sql = "SELECT COUNT(*) FROM CGV_MEMBER2 WHERE ID = ? AND PASS = ?";
+		String sql = "SELECT (SUM((CASE WHEN ID = ? THEN 1 ELSE 0 END)) + " + 
+				" SUM((CASE WHEN ID = ? AND PASS = ? THEN 1 ELSE 0 END))) AS TOTAL " + 
+				" FROM CGV_MEMBER2";
 		try {
 			getPreparedStatement(sql);
 			pstmt.setString(1, vo.getId());
-			pstmt.setString(2, vo.getPass());
+			pstmt.setString(2, vo.getId());
+			pstmt.setString(3, vo.getPass());
+			
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				result = rs.getInt(1);
