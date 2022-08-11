@@ -13,10 +13,61 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="http://localhost:9000/mycgv2/js/mycgv_jquery.js"></script>
 <script>
-	let join_result = '<%= join_result %>';
-	if(join_result == "fail"){
-		alert("회원가입에 실패하였습니다.");
-	}
+	$(document).ready(function(){
+		let join_result = '<%= join_result %>';
+		if(join_result == "fail"){
+			alert("회원가입에 실패하였습니다.");
+		}
+		
+		//아이디 중복확인 버튼 정리
+		$("#idCheck").click(function(){
+			//아이디 값의 체크 - 유효성 체크(Validation Check)
+			if($("#id").val() == ""){
+				alert("아이디를 입력해주세요");
+				$("#id").focus();
+				return false;
+			}else{
+				//AJAX를 통해 서버로 요청/응답
+				//jQuery의 메소드 $.ajax();
+				//ajax 혼자서 작업하지 못하며, jQuery를 통해 작업이 가능함
+				$.ajax({
+					//url : "요청 서버 페이지",
+					//success : function(실행 결과)	-> 다른 곳으로 절대 못 보내고 무조건 실행 결과로 결과값을 반환 받게 된다.
+					url : "idCheckController.jsp?id="+$("#id").val(),
+					//콜백 함수
+					success : function(data){	//Network 와 Network 간의 데이터 이동은 String 형태로만 가능하다.
+						//AJAX에는 무조건 String 형태로 데이터를 보낼 수 있지만 javascript에서는 데이터에 따라서 자동으로 데이터형이 정해진다.
+						//alert("data -> " + data);
+						if(data == 1){
+							//jQuery에서는 요소가 존재하지 않아도 자동적으로 객체를 만들어 반환하기 때문에 요소가 있는걸로 뜬다.
+							//따라서 요소가 존재하는지 하지 않는지는 length를 통해 파악
+							if($('#idCheckMsg').length == 0){
+								$("#idCheck").after("<span id = 'idCheckMsg'>이미 사용중인 아이디입니다.</span>");
+								$("#idCheckMsg")
+								.css("color", "red").css({"font-size" : "12px", "margin-left" : "160px", "margin-top" : "5px"});
+							}else{
+								$("#idCheckMsg").text("이미 사용중인 아이디입니다.")
+								.css("color", "red").css({"font-size" : "12px", "margin-left" : "160px", "margin-top" : "5px"});
+							}
+							/*$("#idCheckMsg").text("이미 사용중인 아이디입니다.")
+							.css("color", "red").css({"font-size" : "12px", "margin-left" : "160px", "margin-top" : "5px"});*/
+						}else{
+							if($("#idCheckMsg").length == 0){
+								$("idCheck").after("<span id = 'idCheckMsg'>사용 가능한 아이디입니다!</span>");
+								$("#idCheckMsg")
+								.css("color", "blue").css({"font-size" : "12px", "margin-left" : "160px", "margin-top" : "5px"});
+							}else{
+								$("#idCheckMsg").text("사용 가능한 아이디입니다!")
+								.css("color", "blue").css({"font-size" : "12px", "margin-left" : "160px", "margin-top" : "5px"});
+							}
+							/*$("#idCheckMsg").text("사용 가능한 아이디입니다!")
+							.css("color", "blue").css({"font-size" : "12px", "margin-left" : "160px", "margin-top" : "5px"});*/
+						}
+					}
+				});//AJAX()
+			}
+		});//idCheckbutton
+	});//ready function
 </script>
 </head>
 <body>
@@ -35,7 +86,8 @@
 				<li>
 					<label>아이디</label>
 					<input type="text" name="id" id="id" placeholder="*영문자숫자포함 8자이상">
-					<button type="button" class="btn_style">중복확인</button>
+					<button type="button" class="btn_style" id="idCheck">중복확인</button>
+					<!-- <span id = "idCheckMsg"></span> -->
 				</li>
 				<li>
 					<label>비밀번호</label>

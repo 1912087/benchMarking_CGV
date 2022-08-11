@@ -6,6 +6,25 @@ import java.util.List;
 import com.mycgv2.vo.CgvMember2VO;
 
 public class CgvMember2DAO extends DBConn{
+	//idCheck : 아이디 중복체크
+	public int idCheck(String id) {
+		int result = 0;
+		String sql = "SELECT COUNT(ID) FROM CGV_MEMBER2 WHERE ID = ?";
+		try {
+			getPreparedStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				result = rs.getInt(1);
+			}
+			
+			close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}//idCheck()
+	
 	//search : 특정 회원 정보 조회
 	public CgvMember2VO search(String id) {
 		CgvMember2VO vo = new CgvMember2VO();
