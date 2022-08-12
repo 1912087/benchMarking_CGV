@@ -6,6 +6,22 @@ import java.util.List;
 import com.mycgv2.vo.CgvMember2VO;
 
 public class CgvMember2DAO extends DBConn{
+	//totalCount() : 게시글 전체 로우 수 조회
+	public int totalCount() {
+		int result = 0;
+		String sql = "SELECT COUNT(*) FROM CGV_MEMBER2";
+		try {
+			getPreparedStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				result = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}//totalCount
+	
 	//idCheck : 아이디 중복체크
 	public int idCheck(String id) {
 		int result = 0;
@@ -53,12 +69,16 @@ public class CgvMember2DAO extends DBConn{
 	}//search()
 	
 	//selectAll : 회원 조회
-	public List<CgvMember2VO> selectAll(){
+	public List<CgvMember2VO> selectAll(int startCount, int endCount){
 		List<CgvMember2VO> list = new ArrayList<CgvMember2VO>();
-		String sql = "SELECT ROWNUM RNO, ID, NAME, PNUMBER, TO_CHAR(MDATE, 'YY-MM-DD') MDATE FROM "
-				+ " (SELECT ID, NAME, PNUMBER, MDATE FROM CGV_MEMBER2 ORDER BY MDATE DESC)";
+		String sql = "SELECT RNOM ID, NAME, PNUMBER, MDATE "
+				+ " FROM (SELECT ROWNUM RNO, ID, NAME, PNUMBER, TO_CHAR(MDATE, 'YY-MM-DD') MDATE FROM "
+				+ " (SELECT ID, NAME, PNUMBER, MDATE FROM CGV_MEMBER2 ORDER BY MDATE DESC))"
+				+ " WHERE RNO BETWEEN ? AND ?";
 		try {
 			getPreparedStatement(sql);
+			pstmt.setInt(1, startCount);
+			pstmt.setInt(2, endCount);
 			rs = pstmt.executeQuery(sql);
 			while(rs.next()) {
 				CgvMember2VO vo = new CgvMember2VO();

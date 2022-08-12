@@ -6,6 +6,23 @@ import java.util.List;
 import com.mycgv2.vo.CgvNotice2VO;
 
 public class CgvNotice2DAO extends DBConn{
+	//totalCount : 게시글 전체 로우 수 출력
+	public int totalCount() {
+		int result = 0;
+		String sql = "SELECT COUNT(NID) FROM CGV_NOTICE2";
+		try {
+			getPreparedStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				result = rs.getInt(1);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}//totalCount()
+	
 	//delete(nid) : 공지사항 삭제
 	public int delete(String nid) {
 		int result = 0;
@@ -98,12 +115,16 @@ public class CgvNotice2DAO extends DBConn{
 	}//insert()
 	
 	//select : 공지사항 전체 조회
-	public List<CgvNotice2VO> select(){
+	public List<CgvNotice2VO> select(int startCount, int endCount){
 		List<CgvNotice2VO> list = new ArrayList<CgvNotice2VO>();
-		String sql = "SELECT ROWNUM RNO, NID, NTITLE, NHITS, TO_CHAR(NDATE, 'YYYY-MM-DD') "
-				+ " FROM(SELECT NID, NTITLE, NHITS, NDATE FROM CGV_NOTICE2 ORDER BY NDATE DESC)";
+		String sql = "SELECT RNO, NID, NTITLE, NHITS, NDATE "
+				+ " FROM (SELECT ROWNUM RNO, NID, NTITLE, NHITS, TO_CHAR(NDATE, 'YYYY-MM-DD') AS NDATE "
+				+ " FROM (SELECT NID, NTITLE, NHITS, NDATE FROM CGV_NOTICE2 ORDER BY NDATE DESC)) "
+				+ " WHERE RNO BETWEEN ? AND ?";
 		try {
 			getPreparedStatement(sql);
+			pstmt.setInt(1, startCount);
+			pstmt.setInt(2, endCount);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				CgvNotice2VO vo = new CgvNotice2VO();

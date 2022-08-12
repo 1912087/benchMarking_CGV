@@ -3,8 +3,21 @@
 <%@ page import = "com.mycgv2.dao.CgvMember2DAO, com.mycgv2.vo.CgvMember2VO, java.util.ArrayList" %>
 
 <%
+	String rpage = request.getParameter("rpage");
 	CgvMember2DAO dao = new CgvMember2DAO();
-	ArrayList<CgvMember2VO> list = (ArrayList<CgvMember2VO>)dao.selectAll();
+
+	//페이징 처리
+	int startCount = 0;
+	int endCount = 0;
+	int pageSize = 5;
+	int reqPage = 1;
+	int pageCount = 1;
+	int dbCount = dao.totalCount();
+	
+	//페이지 전체 조회
+	
+	
+	ArrayList<CgvMember2VO> list = (ArrayList<CgvMember2VO>)dao.selectAll(startCount, endCount);
 %>
 <!DOCTYPE html>
 <html>
